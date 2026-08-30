@@ -1,0 +1,164 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject UserManager<ApplicationUser> UserManager
+@{
+    var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+    var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
+    var transactionOpen = currentController is "Deposits" or "Withdrawals";
+    var currentAdmin = await UserManager.GetUserAsync(User);
+
+    string NavClass(bool active) => active
+        ? "bg-blue-900 text-white"
+        : "text-blue-200 hover:bg-blue-900/50 hover:text-white";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] | Admin | EquityInv</title>
+    <link rel="stylesheet" href="~/src/output.css" />
+    <link rel="icon" href="~/assets/favicon.png" type="image/x-icon" />
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <script src="https://kit.fontawesome.com/46f4625f97.js" crossorigin="anonymous"></script>
+</head>
+<body class="bg-gray-100">
+    <div class="flex min-h-screen">
+
+        <!-- Sidebar -->
+        <aside id="sidebar"
+            class="fixed inset-y-0 left-0 z-40 w-64 bg-blue-950 text-white flex flex-col transform -translate-x-full lg:translate-x-0 transition-transform duration-200">
+            <div class="flex items-center gap-3 px-5 py-5 border-b border-blue-900">
+                <img src="~/assets/favicon.png" alt="EquityLogo" class="w-10 h-10 rounded-full object-cover" />
+                <div>
+                    <p class="font-bold leading-tight">EquityInv</p>
+                    <p class="text-xs text-blue-300 leading-tight">Admin Panel</p>
+                </div>
+            </div>
+
+            <nav class="flex-1 overflow-y-auto px-3 py-4 space-y-1">
+                <a asp-controller="Dashboard" asp-action="Index"
+                    class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium @NavClass(currentController == "Dashboard")">
+                    <i class="fa-solid fa-gauge-high w-5"></i> Dashboard
+                </a>
+                <a asp-controller="Users" asp-action="Index"
+                    class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium @NavClass(currentController == "Users")">
+                    <i class="fa-solid fa-users w-5"></i> Users
+                </a>
+
+                <!-- Transactions group -->
+                <button type="button" id="transToggle"
+                    class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium @NavClass(transactionOpen)">
+                    <i class="fa-solid fa-clock-rotate-left w-5"></i>
+                    <span>Transactions</span>
+                    <i class="fa-solid fa-chevron-down ms-auto text-xs transition-transform" id="transChevron"></i>
+                </button>
+                <div id="transSubMenu" class="pl-8 space-y-1 @(transactionOpen ? "" : "hidden")">
+                    <a asp-controller="Deposits" asp-action="Index"
+                        class="block px-3 py-2 rounded-lg text-sm @NavClass(currentController == "Deposits")">Deposits</a>
+                    <a asp-controller="Withdrawals" asp-action="Index"
+                        class="block px-3 py-2 rounded-lg text-sm @NavClass(currentController == "Withdrawals")">Withdrawals</a>
+                </div>
+
+                <a asp-controller="InvestmentPlans" asp-action="Index"
+                    class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium @NavClass(currentController == "InvestmentPlans")">
+                    <i class="fa-solid fa-briefcase w-5"></i> Plans
+                </a>
+                <a asp-controller="DepositAccounts" asp-action="Index"
+                   class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium @NavClass(currentController == "DepositAccounts")">
+                    <i class="fa-solid fa-building-columns w-5"></i> Deposit Accounts
+                </a>
+                <a asp-controller="GiftCodes" asp-action="Index"
+                   class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium @NavClass(currentController == "GiftCodes")">
+                    <i class="fa-solid fa-gift w-5"></i> Gift Codes
+                </a>
+            </nav>
+
+            <div class="p-3 border-t border-blue-900">
+                <form asp-controller="Auth" asp-action="Logout" method="post">
+                    @Html.AntiForgeryToken()
+                    <button type="submit"
+                        class="w-full flex items-center justify-center gap-2 text-sm font-semibold text-red-300 border border-red-400/40 rounded-lg py-2 hover:bg-red-500/10 transition">
+                        <i class="fa-solid fa-right-from-bracket"></i> Logout
+                    </button>
+                </form>
+            </div>
+        </aside>
+
+        <div id="sidebarOverlay" class="fixed inset-0 bg-black/40 z-30 hidden lg:hidden"></div>
+
+        <!-- Main -->
+        <div class="flex-1 lg:ml-64">
+            <header class="sticky top-0 z-20 bg-white shadow-sm px-4 sm:px-6 py-3 flex items-center gap-3">
+                <button id="sidebarToggle" class="lg:hidden text-gray-600 text-xl">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+                <h1 class="font-bold text-gray-800 text-lg">@ViewData["PageTitle"]</h1>
+
+                <div class="ms-auto relative">
+                    <button id="profileToggle" class="flex items-center gap-2">
+                        <div class="text-end hidden sm:block">
+                            <p class="text-sm font-bold text-gray-800 leading-tight">@(currentAdmin?.FullName)</p>
+                            <p class="text-xs text-gray-400 leading-tight">Administrator</p>
+                        </div>
+                        <div class="w-9 h-9 rounded-full bg-blue-950 text-white flex items-center justify-center">
+                            <i class="fa-solid fa-user"></i>
+                        </div>
+                    </button>
+                    <div id="profileMenu"
+                        class="hidden absolute right-0 mt-2 w-44 bg-white rounded-xl shadow-lg border border-gray-100 py-2">
+                        <form asp-controller="Auth" asp-action="Logout" method="post">
+                            @Html.AntiForgeryToken()
+                            <button type="submit"
+                                class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50">
+                                <i class="fa-solid fa-right-from-bracket me-2"></i> Logout
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </header>
+
+            <main class="p-4 sm:p-6">
+                @if (TempData["Success"] != null)
+                {
+                    <div class="mb-4 rounded-lg bg-green-50 text-green-700 text-sm px-4 py-2">@TempData["Success"]</div>
+                }
+                @if (TempData["Error"] != null)
+                {
+                    <div class="mb-4 rounded-lg bg-red-50 text-red-700 text-sm px-4 py-2">@TempData["Error"]</div>
+                }
+                @RenderBody()
+            </main>
+        </div>
+    </div>
+
+    @await RenderSectionAsync("Scripts", required: false)
+
+    <script>
+        const sidebar = document.getElementById("sidebar");
+        const overlay = document.getElementById("sidebarOverlay");
+        document.getElementById("sidebarToggle").addEventListener("click", () => {
+            sidebar.classList.remove("-translate-x-full");
+            overlay.classList.remove("hidden");
+        });
+        overlay.addEventListener("click", () => {
+            sidebar.classList.add("-translate-x-full");
+            overlay.classList.add("hidden");
+        });
+
+        document.getElementById("transToggle").addEventListener("click", () => {
+            document.getElementById("transSubMenu").classList.toggle("hidden");
+            document.getElementById("transChevron").classList.toggle("rotate-180");
+        });
+
+        const profileToggle = document.getElementById("profileToggle");
+        const profileMenu = document.getElementById("profileMenu");
+        profileToggle.addEventListener("click", () => profileMenu.classList.toggle("hidden"));
+        document.addEventListener("click", (e) => {
+            if (!profileToggle.contains(e.target) && !profileMenu.contains(e.target)) {
+                profileMenu.classList.add("hidden");
+            }
+        });
+    </script>
+</body>
+</html>

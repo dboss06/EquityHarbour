@@ -1,0 +1,12 @@
+{
+  "name": "equityharbour",
+  "private": true,
+  "scripts": {
+    "build:css": "tailwindcss -i ./wwwroot/src/input.css -o ./wwwroot/src/output.css --minify",
+    "watch:css": "tailwindcss -i ./wwwroot/src/input.css -o ./wwwroot/src/output.css --watch"
+  },
+  "devDependencies": {
+    "tailwindcss": "^4.0.0",
+    "@tailwindcss/cli": "^4.0.0"
+  }
+}

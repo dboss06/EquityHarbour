@@ -1,0 +1,69 @@
+﻿@model List<EquityHarbour.Models.ApplicationUser>
+@{
+    ViewData["Title"] = "My Team";
+    var activeLevel = ViewData["ActiveLevel"] as string ?? "direct";
+    string TabClass(string level) => activeLevel == level
+        ? "bg-blue-950 text-white"
+        : "bg-white text-gray-700 border border-gray-100";
+}
+
+<nav class="fixed top-0 left-0 w-full bg-white shadow-gray-100 z-50">
+    <div class="flex items-center justify-between px-8 md:px-12 lg:px-50 py-2">
+        <div class="flex items-center gap-3">
+            <a asp-controller="Home" asp-action="Index" class="flex flex-col items-center gap-1 text-blue-950">
+                <span class="material-symbols-rounded icon-fill text-blue-950">arrow_back_ios</span>
+            </a>
+        </div>
+        <div class="text-center">
+            <h1 class="text-lg font-medium text-gray-700">My Team</h1>
+        </div>
+        <div class="flex items-center gap-1.5 text-sm font-medium px-3 py-1 rounded-full">
+            <a asp-controller="Referrals" asp-action="Invite" class="text-md font-medium text-blue-950">Invite</a>
+        </div>
+    </div>
+</nav>
+
+<main class="pt-10 pb-20 min-h-screen bg-gray-100">
+    <div class="w-full max-w-4xl mx-auto p-4 sm:p-6 min-h-[400px] flex flex-col">
+        <div class="flex flex-wrap gap-2 sm:gap-3 mb-8">
+            <a asp-controller="Referrals" asp-action="Index" asp-route-level="direct"
+               class="px-4 py-2 text-sm font-semibold rounded-lg shadow-sm transition @TabClass("direct")">Direct</a>
+            <a asp-controller="Referrals" asp-action="Index" asp-route-level="second"
+               class="px-4 py-2 text-sm font-semibold rounded-lg shadow-sm transition @TabClass("second")">Second Level</a>
+            <a asp-controller="Referrals" asp-action="Index" asp-route-level="third"
+               class="px-4 py-2 text-sm font-semibold rounded-lg shadow-sm transition @TabClass("third")">Third Level</a>
+        </div>
+
+        @if (Model.Any())
+        {
+            <div class="space-y-3">
+                @foreach (var member in Model)
+                {
+                    <div class="bg-white rounded-xl shadow-sm p-4 flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-full bg-blue-50 text-blue-950 flex items-center justify-center font-bold text-sm">
+                                @(member.FullName.Length > 0 ? member.FullName[..1].ToUpper() : "?")
+                            </div>
+                            <div>
+                                <p class="text-sm font-bold text-gray-800">@member.FullName</p>
+                                <p class="text-xs text-gray-400">@member.Email</p>
+                            </div>
+                        </div>
+                        <p class="text-xs text-gray-400">Joined @member.CreatedAt.ToString("MMM d, yyyy")</p>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="flex-grow flex flex-col items-center justify-center text-center pb-12">
+                <div class="text-gray-400 mb-3">
+                    <i class="fa-solid fa-users text-4xl sm:text-5xl"></i>
+                </div>
+                <p class="text-sm font-medium text-gray-400 tracking-wide">
+                    No referral yet
+                </p>
+            </div>
+        }
+    </div>
+</main>

@@ -1,0 +1,90 @@
+﻿@model List<EquityHarbour.DTOs.Tasks.TaskMilestoneDto>
+@{
+    ViewData["Title"] = "Tasks";
+}
+
+<nav class="fixed top-0 left-0 w-full bg-white shadow-gray-100 z-50">
+    <div class="flex items-center justify-between px-8 md:px-12 lg:px-50 py-2">
+        <div class="flex items-center gap-3">
+            <a asp-controller="Home" asp-action="Index" class="flex flex-col items-center gap-1 text-blue-950">
+                <span class="material-symbols-rounded icon-fill text-blue-950">arrow_back_ios</span>
+            </a>
+        </div>
+        <div class="text-center items-center">
+            <h1 class="text-lg font-medium text-gray-700">Tasks</h1>
+        </div>
+        <div class="flex items-center gap-1.5 text-sm font-medium px-3 py-1 rounded-full"></div>
+    </div>
+</nav>
+
+<main class="pt-15 pb-20 min-h-screen bg-gray-100">
+    @if (TempData["Success"] != null)
+    {
+        <div class="mx-2 md:mx-12 lg:mx-50 mb-3 rounded-lg bg-green-50 text-green-700 text-sm px-4 py-2">@TempData["Success"]</div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="mx-2 md:mx-12 lg:mx-50 mb-3 rounded-lg bg-red-50 text-red-700 text-sm px-4 py-2">@TempData["Error"]</div>
+    }
+
+    <div class="mt-3 mx-2 md:mx-12 lg:mx-50 rounded-xl p-7 px-3 md:p-6 lg:p-3 lg:px-5">
+        <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6">
+            @foreach (var task in Model)
+            {
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 bg-[#2EAB4F] text-white font-bold px-5 py-1 reward-badge text-sm">
+                        +₦@task.RewardAmount.ToString("N2")
+                    </div>
+                    <div class="mt-2 mb-4">
+                        <span class="bg-blue-950 text-white text-sm font-bold px-3 py-1.5 rounded-md">
+                            Get @task.Target referrals to make their first deposit
+                        </span>
+                    </div>
+                    <div class="space-y-2">
+                        <div class="flex justify-between items-end border-b border-dotted border-gray-400 pb-1">
+                            <span class="text-gray-800 font-semibold text-sm">Current Streak</span>
+                            <span class="text-gray-900 font-bold text-lg">@task.CurrentCount</span>
+                        </div>
+                        <div class="flex justify-between items-end border-b border-dotted border-gray-400 pb-1">
+                            <span class="text-gray-800 font-semibold text-sm">Target</span>
+                            <span class="text-gray-900 font-bold text-lg">@task.Target</span>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <div class="flex justify-between text-[10px] text-gray-400 font-bold uppercase mb-1">
+                            <span>Progress</span>
+                            <span>@task.ProgressPercent%</span>
+                        </div>
+                        <div class="w-full bg-gray-200 h-1.5 rounded-full">
+                            <div class="bg-gray-300 h-full rounded-full" style="width: @task.ProgressPercent%"></div>
+                        </div>
+                    </div>
+                    <div class="mt-6 flex justify-end">
+                        @if (task.IsClaimed)
+                        {
+                            <span class="bg-green-50 border border-green-300 text-green-600 px-4 py-1.5 rounded-lg font-bold text-sm">
+                                <i class="fa-solid fa-check me-1"></i> Claimed
+                            </span>
+                        }
+                        else if (task.CanClaim)
+                        {
+                            <form asp-controller="Tasks" asp-action="Claim" method="post">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="target" value="@task.Target" />
+                                <button type="submit" class="bg-blue-950 text-white px-4 py-1.5 rounded-lg font-bold text-sm hover:bg-blue-900">
+                                    Claim Reward
+                                </button>
+                            </form>
+                        }
+                        else
+                        {
+                            <span class="bg-blue-950/10 border border-blue-300 px-4 py-1.5 rounded-lg font-bold text-sm">
+                                In Progress
+                            </span>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</main>

@@ -1,0 +1,86 @@
+﻿@model EquityHarbour.Models.ViewModels.ProductsViewModel
+@using EquityHarbour.Models
+@{
+    ViewData["Title"] = "My Products";
+
+    string StatusClass(InvestmentStatus status) => status switch
+    {
+        InvestmentStatus.Active => "text-green-600",
+        InvestmentStatus.Completed => "text-gray-500",
+        _ => "text-cyan-600"
+    };
+}
+
+<nav class="fixed top-0 left-0 w-full bg-white shadow-gray-100 z-50">
+    <div class="flex items-center justify-between px-8 md:px-12 lg:px-50 py-2">
+        <div class="flex items-center gap-3">
+            <a asp-controller="Home" asp-action="Index" class="flex flex-col items-center gap-1 text-blue-950">
+                <span class="material-symbols-rounded icon-fill text-blue-950">arrow_back_ios</span>
+            </a>
+        </div>
+        <div class="text-center">
+            <h1 class="text-lg font-medium text-gray-700">My Products</h1>
+        </div>
+        <div class="flex items-center gap-1.5 text-sm font-medium px-3 py-1 rounded-full"></div>
+    </div>
+</nav>
+
+<main class="pt-15 pb-16 min-h-screen bg-gray-100">
+    <div class="mt-2 mx-2 md:mx-12 lg:mx-105 bg-gradient-to-b from-blue-900 to-blue-950 text-white rounded-xl p-7 px-3 md:p-6 lg:p-3 shadow-xl">
+        <div class="pb-1">
+            <p class="mt-1 text-sm font-medium text-gray-300">My Total Daily Income</p>
+            <h1 class="text-2xl font-bold">₦@Model.TotalDailyIncome.ToString("N2")</h1>
+        </div>
+    </div>
+
+    @if (!Model.Investments.Any())
+    {
+        <div class="mt-10 mx-2 md:mx-12 lg:mx-105 rounded-xl p-7 px-3 md:p-6 lg:p-3">
+            <div class="items-center text-center">
+                <i class="fa-solid fa-clipboard text-5xl text-blue-300"></i>
+                <p class="text-blue-300">No package purchased</p>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="mt-6 mx-2 md:mx-12 lg:mx-40 grid grid-cols-1 md:grid-cols-2 gap-4 pb-3">
+            @foreach (var inv in Model.Investments)
+            {
+                <div class="px-4 py-4 bg-white rounded-lg shadow-xl">
+                    <div class="flex justify-between items-start">
+                        <h1 class="font-bold text-gray-700">@inv.InvestmentPlanName</h1>
+                        <span class="text-xs font-semibold capitalize @StatusClass(inv.Status)">@inv.Status.ToString().ToLower()</span>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3 mt-3">
+                        <div>
+                            <p class="text-sm font-medium text-gray-400">Amount Invested</p>
+                            <h3 class="text-md font-bold text-gray-700">₦@inv.PrincipalAmount.ToString("N0")</h3>
+                        </div>
+                        <div class="text-end">
+                            @if (inv.PayoutFrequency == InvestmentPayoutFrequency.Daily)
+                            {
+                                <p class="text-sm font-medium text-gray-400">Daily Earning</p>
+                                <h3 class="text-md font-bold text-gray-700">₦@((inv.ExpectedReturn / inv.DurationDays).ToString("N2"))</h3>
+                            }
+                            else
+                            {
+                                <p class="text-sm font-medium text-gray-400">Total Earning</p>
+                                <h3 class="text-md font-bold text-gray-700">₦@inv.ExpectedReturn.ToString("N2")</h3>
+                            }
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium text-gray-400">Duration</p>
+                            <h3 class="text-md font-bold text-gray-700">@inv.DurationDays days</h3>
+                        </div>
+                        <div class="text-end">
+                            <p class="text-sm font-medium text-gray-400">Matures</p>
+                            <h3 class="text-md font-bold text-gray-700">@(inv.MaturityDate?.ToString("MMM d, yyyy") ?? "-")</h3>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</main>
+</main>

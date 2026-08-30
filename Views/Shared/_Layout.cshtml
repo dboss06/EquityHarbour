@@ -1,0 +1,48 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - EquityInv</title>
+    <link rel="stylesheet" href="~/src/output.css" />
+    <link rel="icon" href="~/assets/favicon.png" type="image/x-icon" />
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <script src="https://kit.fontawesome.com/46f4625f97.js" crossorigin="anonymous"></script>
+    @await RenderSectionAsync("Styles", required: false)
+</head>
+<body>
+    @RenderBody()
+
+    <footer class="fixed bottom-0 left-0 w-full z-50 bg-white text-blue-950 shadow-sm h-18">
+        <div class="flex items-center justify-around py-3">
+            @{
+                var active = ViewData["ActiveNav"] as string ?? "";
+                string NavClass(string name) => active == name ? "text-blue-950" : "text-gray-400";
+            }
+            <a asp-controller="Home" asp-action="Index" class="flex flex-col items-center gap-1 @NavClass("Home")">
+                <i class="fa-solid fa-house-user text-2xl"></i>
+                <span class="text-xs font-medium">Home</span>
+            </a>
+            <a asp-controller="Products" asp-action="Index" class="flex flex-col items-center gap-1 @NavClass("Products")">
+                <i class="fa-solid fa-cube text-2xl"></i>
+                <span class="text-xs font-medium">Products</span>
+            </a>
+            <a asp-controller="Tasks" asp-action="Index" class="flex flex-col items-center gap-1 @NavClass("Tasks")">
+                <i class="fa-solid fa-list-check text-2xl"></i>
+                <span class="text-xs font-medium">Tasks</span>
+            </a>
+            <a asp-controller="Referrals" asp-action="Index" class="flex flex-col items-center gap-1 @NavClass("Invite")">
+                <i class="fa-solid fa-user-plus text-2xl"></i>
+                <span class="text-xs font-medium">Invite</span>
+            </a>
+            <a asp-controller="Profile" asp-action="Index" class="flex flex-col items-center gap-1 @NavClass("Profile")">
+                <i class="fa-solid fa-circle-user text-2xl"></i>
+                <span class="text-xs font-medium">Profile</span>
+            </a>
+        </div>
+    </footer>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

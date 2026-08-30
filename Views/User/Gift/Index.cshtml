@@ -1,0 +1,70 @@
+﻿@model EquityHarbour.Models.ViewModels.GiftCodeViewModel
+@{
+    ViewData["Title"] = "Gift Code";
+}
+
+<nav class="fixed top-0 left-0 w-full bg-white shadow-gray-100 z-50">
+    <div class="flex items-center justify-between px-8 md:px-12 lg:px-50 py-2">
+        <div class="flex items-center gap-3">
+            <a asp-controller="Home" asp-action="Index" class="flex flex-col items-center gap-1 text-blue-950">
+                <span class="material-symbols-rounded icon-fill text-blue-950">arrow_back_ios</span>
+            </a>
+        </div>
+        <div class="text-center">
+            <h1 class="text-lg font-medium text-gray-700">Bank</h1>
+        </div>
+        <div class="flex items-center gap-1.5 text-sm font-medium px-3 py-1 rounded-full">
+            <a asp-controller="Transactions" asp-action="Index" class="text-md font-medium text-blue-950">History</a>
+        </div>
+    </div>
+</nav>
+
+<main class="px-3 md:px-12 lg:px-50 pt-15 mb-10 min-h-screen bg-gray-100 pb-3">
+    <div class="mx-4 sm:mx-auto my-10 max-w-md">
+        <div class="w-full rounded-xl bg-white p-5 shadow-sm">
+
+            @if (!ViewData.ModelState.IsValid)
+            {
+                <div class="mb-3 rounded-lg bg-red-50 text-red-700 text-sm px-3 py-2">
+                    <div asp-validation-summary="All"></div>
+                </div>
+            }
+            @if (TempData["Success"] != null)
+            {
+                <div class="mb-3 rounded-lg bg-green-50 text-green-700 text-sm px-3 py-2">@TempData["Success"]</div>
+            }
+            <form asp-controller="Gift" asp-action="Redeem" method="post">
+                @Html.AntiForgeryToken()
+
+                <label asp-for="Code" class="block text-sm font-semibold text-gray-900 mb-1">
+                    Enter Gift Code
+                </label>
+
+                <div class="relative border border-gray-200 rounded-xl focus-within:border-orange-400 focus-within:ring-1 focus-within:ring-orange-400 transition">
+                    <input asp-for="Code" type="text" placeholder="Enter your gift code"
+                           class="w-full h-full border-0 bg-transparent px-3 py-3 text-sm outline-none rounded-xl">
+                </div>
+                <span asp-validation-for="Code" class="text-xs text-red-600"></span>
+
+                <small class="block mt-1 text-xs font-medium text-gray-400">
+                    Enter a valid gift code to claim your reward
+                </small>
+
+                <button type="submit"
+                        class="mt-5 h-[50px] w-full rounded-xl bg-blue-950 text-sm font-bold text-white transition hover:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2">
+                    Redeem Code
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div class="w-full rounded-xl bg-white p-5 mb-10 shadow-sm mt-3">
+        <h1 class="pt-3 pb-2 px-3 text-lg font-extrabold text-gray-800">Instructions</h1>
+        <p class="px-3 mb-2 text-md font-medium text-gray-800"><i class="fa-solid fa-circle-check" style="color: #2ecc71;"></i> Ensure you are active on the platform's official groups & communities on WhatsApp & Telegram.</p>
+        <p class="px-3 mb-2 text-md font-medium text-gray-800"><i class="fa-solid fa-circle-check" style="color: #2ecc71;"></i> Gift codes are short-lived so stay active to claim them as soon as they drop.</p>
+    </div>
+</main>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

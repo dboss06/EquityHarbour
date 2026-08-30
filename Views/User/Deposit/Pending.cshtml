@@ -1,0 +1,41 @@
+﻿@{
+    ViewData["Title"] = "Deposit Pending";
+}
+
+<nav class="fixed top-0 left-0 w-full bg-white shadow-gray-100 z-50">
+    <div class="flex items-center justify-between px-8 md:px-12 lg:px-50 py-2">
+        <div class="text-center w-full">
+            <h1 class="text-lg font-medium text-gray-700">Deposit Submitted</h1>
+        </div>
+    </div>
+</nav>
+
+<main class="px-3 md:px-12 lg:px-75 pt-24 min-h-screen bg-gray-100 pb-3">
+    <div class="w-full rounded-xl bg-white p-6 shadow-sm text-center">
+        <i class="fa-solid fa-clock text-5xl text-yellow-500"></i>
+        <h2 class="mt-4 text-lg font-bold text-gray-800">Your deposit is pending approval</h2>
+        <p class="mt-2 text-sm text-gray-500">Reference: <span class="font-semibold text-gray-700">@ViewData["Reference"]</span></p>
+        <p class="mt-2 text-sm text-gray-500">Your balance will update once the transfer is confirmed.</p>
+        @if (!string.IsNullOrEmpty(ViewData["Bank"] as string))
+        {
+            <div class="mt-4 rounded-lg bg-blue-50 border border-blue-100 p-4 space-y-2 text-left">
+                <div class="flex justify-between text-sm">
+                    <span class="text-gray-500">Bank</span>
+                    <span class="font-bold text-gray-800">@ViewData["Bank"]</span>
+                </div>
+                <div class="flex justify-between text-sm">
+                    <span class="text-gray-500">Account Number</span>
+                    <span class="font-bold text-gray-800">@ViewData["Number"]</span>
+                </div>
+                <div class="flex justify-between text-sm">
+                    <span class="text-gray-500">Account Name</span>
+                    <span class="font-bold text-gray-800">@ViewData["Name"]</span>
+                </div>
+            </div>
+        }
+        <a asp-controller="Home" asp-action="Index"
+           class="mt-6 inline-block h-[46px] w-full leading-[46px] rounded-[9px] bg-blue-950 text-sm font-bold text-white">
+            Back to Dashboard
+        </a>
+    </div>
+</main>

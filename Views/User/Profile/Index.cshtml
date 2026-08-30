@@ -1,0 +1,105 @@
+﻿@model EquityHarbour.Models.ViewModels.ProfileViewModel
+@{
+    ViewData["Title"] = "Profile";
+    ViewData["ActiveNav"] = "Profile";
+}
+
+<main class="px-3 md:px-12 lg:px-50 pt-2 mb-15 min-h-screen bg-gray-100 pb-3">
+    <div class="rounded-xl bg-gradient-to-b from-blue-950 to-white p-[1px]">
+        <div class="rounded-[10px] bg-gradient-to-b from-blue-200 to-white">
+            <div class="px-5 py-3">
+                <p class="pt-3 text-md font-bold text-blue-900">My Balance</p>
+                <h1 class="pt-1 text-4xl font-black text-gray-700">₦@Model.Balance.ToString("N2")</h1>
+            </div>
+            <div class="py-3 px-2 flex justify-between">
+                <div class="w-3/6 bg-blue-900 text-center py-2 me-2 rounded-4xl">
+                    <a asp-controller="Deposit" asp-action="Index" class="font-semibold w-100 text-white text-center">Deposit</a>
+                </div>
+                <div class="w-3/6 bg-blue-950 text-center py-2 ms-2 rounded-4xl">
+                    <a asp-controller="Withdraw" asp-action="Index" class="font-semibold w-100 text-white text-center">Withdraw</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="py-1 px-3 my-3 rounded-xl shadow-md bg-white">
+        <div class="p-3">
+            <a asp-controller="Bank" asp-action="Index" class="flex justify-between pb-3 pt-2">
+                <div class="flex mx-3">
+                    <i class="fa-solid fa-building-columns text-blue-950 text-2xl"></i>
+                    <p class="px-2 text-[15px] font-bold text-gray-600">Bank Account</p>
+                </div>
+                <i class="justify-center fa-solid fa-circle-chevron-right text-gray-400 text-xl"></i>
+            </a>
+            <hr class="border-t border-gray-200 mb-2" />
+
+            <a asp-controller="Transactions" asp-action="Index" class="flex justify-between pb-3 pt-2">
+                <div class="flex mx-3">
+                    <i class="fa-solid fa-receipt text-2xl text-blue-950"></i>
+                    <p class="px-2 text-[15px] font-bold text-gray-600">Transaction History</p>
+                </div>
+                <i class="justify-center fa-solid fa-circle-chevron-right text-gray-400 text-xl"></i>
+            </a>
+            <hr class="border-t border-gray-200 mb-2" />
+
+            <a asp-controller="Tasks" asp-action="Index" class="flex justify-between pb-3 pt-2">
+                <div class="flex mx-3">
+                    <i class="fa-solid fa-list-check text-blue-950 text-2xl"></i>
+                    <p class="px-2 text-[15px] font-bold text-gray-600">Tasks</p>
+                </div>
+                <i class="justify-center fa-solid fa-circle-chevron-right text-gray-400 text-xl"></i>
+            </a>
+            <hr class="border-t border-gray-200 mb-2" />
+
+            <a asp-controller="Products" asp-action="Index" class="flex justify-between pb-2 pt-3">
+                <div class="flex mx-3">
+                    <i class="fa-solid fa-cube text-blue-950 text-2xl"></i>
+                    <p class="px-2 text-[15px] font-bold text-gray-600">My Products</p>
+                </div>
+                <i class="justify-center fa-solid fa-circle-chevron-right text-gray-400 text-xl"></i>
+            </a>
+            <hr class="border-t border-gray-200 mb-2" />
+
+            <a asp-controller="Gift" asp-action="Index" class="flex justify-between pb-2 pt-3">
+                <div class="flex mx-3">
+                    <i class="fa-solid fa-gift text-blue-950 text-2xl"></i>
+                    <p class="px-2 text-[15px] font-bold text-gray-600">Gift Code</p>
+                </div>
+                <i class="justify-center fa-solid fa-circle-chevron-right text-gray-400 text-xl"></i>
+            </a>
+            <hr class="border-t border-gray-200 mb-2" />
+
+            <a asp-controller="Referrals" asp-action="Index" class="flex justify-between pb-2 pt-3">
+                <div class="flex mx-3">
+                    <i class="fa-solid fa-user-plus text-blue-950 text-2xl"></i>
+                    <p class="px-2 text-[15px] font-bold text-gray-600">My Team</p>
+                </div>
+                <i class="justify-center fa-solid fa-circle-chevron-right text-gray-400 text-xl"></i>
+            </a>
+            <hr class="border-t border-gray-200 mb-2" />
+
+            <a asp-controller="Profile" asp-action="ResetPassword" class="flex justify-between pb-2 pt-3">
+                <div class="flex mx-3">
+                    <i class="fa-solid fa-key text-blue-950 text-2xl"></i>
+                    <p class="px-2 text-[15px] font-bold text-gray-600">Reset Password</p>
+                </div>
+                <i class="justify-center fa-solid fa-circle-chevron-right text-gray-400 text-xl"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="px-3 mb-5 rounded-xl shadow-md bg-white">
+        <div class="p-3">
+            <form asp-controller="Auth" asp-action="Logout" method="post">
+                @Html.AntiForgeryToken()
+                <button type="submit" class="flex w-full justify-between pb-3 pt-2 text-left">
+                    <div class="flex mx-3">
+                        <i class="fa-solid fa-right-from-bracket text-blue-950 text-2xl"></i>
+                        <p class="px-2 text-[15px] font-bold text-gray-600">Logout</p>
+                    </div>
+                    <i class="justify-center fa-solid fa-circle-chevron-right text-gray-400 text-xl"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+</main>

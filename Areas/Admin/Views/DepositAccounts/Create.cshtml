@@ -1,0 +1,40 @@
+﻿@model EquityHarbour.DTOs.DepositAccounts.CreateDepositAccountRequest
+
+<div class="max-w-xl mx-auto bg-white rounded-xl shadow-sm p-6">
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div class="mb-4 rounded-lg bg-red-50 text-red-700 text-sm px-4 py-2">
+            <div asp-validation-summary="All"></div>
+        </div>
+    }
+
+    <form asp-controller="DepositAccounts" asp-action="Create" method="post">
+        @Html.AntiForgeryToken()
+
+        <div class="mb-4">
+            <label asp-for="BankName" class="block text-sm font-semibold text-gray-700 mb-1">Bank Name</label>
+            <input asp-for="BankName" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-blue-950">
+        </div>
+        <div class="mb-4">
+            <label asp-for="AccountNumber" class="block text-sm font-semibold text-gray-700 mb-1">Account Number</label>
+            <input asp-for="AccountNumber" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-blue-950">
+        </div>
+        <div class="mb-4">
+            <label asp-for="AccountName" class="block text-sm font-semibold text-gray-700 mb-1">Account Name</label>
+            <input asp-for="AccountName" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-blue-950">
+        </div>
+        <div class="mb-6">
+            <label asp-for="DisplayOrder" class="block text-sm font-semibold text-gray-700 mb-1">Display Order</label>
+            <input asp-for="DisplayOrder" type="number" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-blue-950">
+            <p class="text-xs text-gray-400 mt-1">Lower numbers show first to users.</p>
+        </div>
+
+        <div class="flex justify-end gap-3">
+            <a asp-controller="DepositAccounts" asp-action="Index"
+               class="px-4 py-2 rounded-lg border border-gray-200 text-sm font-semibold text-gray-600">Cancel</a>
+            <button type="submit" class="px-4 py-2 rounded-lg bg-blue-950 text-white text-sm font-semibold">
+                <i class="fa-solid fa-check me-1"></i> Add Account
+            </button>
+        </div>
+    </form>
+</div>

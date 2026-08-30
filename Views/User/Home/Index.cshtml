@@ -1,0 +1,166 @@
+﻿@model EquityHarbour.Models.ViewModels.DashboardViewModel
+@{
+    ViewData["Title"] = "Dashboard";
+    ViewData["ActiveNav"] = "Home";
+}
+
+<nav class="fixed top-0 left-0 w-full bg-white shadow-gray-100 z-50">
+    <div class="flex items-center justify-between px-8 md:px-12 lg:px-50 py-3">
+        <div class="flex items-center gap-3">
+            <img src="~/assets/logo.png" alt="User avatar" class="w-10 h-10 rounded-full object-cover" />
+            <div>
+                <p class="text-sm text-gray-500 leading-tight">Welcome Back,</p>
+                <p class="text-base font-bold text-gray-900 leading-tight">@Model.UserEmail</p>
+            </div>
+        </div>
+        <div class="flex items-center gap-1.5 border border-green-300 bg-green-50 text-green-600 text-sm font-medium px-3 py-1 rounded-full">
+            <span class="relative flex h-2 w-2">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+            </span>
+            Live
+        </div>
+    </div>
+</nav>
+
+<main class="pt-16 pb-16 min-h-screen bg-gray-100">
+    <div class="mt-7 mx-2 md:mx-12 lg:mx-50 bg-gradient-to-b from-blue-950 to-blue-900 text-white rounded-xl p-7 px-3 md:p-6 lg:p-3 shadow-xl">
+        <div class="pb-7 border-dashed border-b-1 border-white">
+            <p class="mt-1 text-md font-semibold text-white/80">Total Balance</p>
+            <h1 class="text-3xl font-black">₦@Model.TotalBalance.ToString("N2")</h1>
+        </div>
+        <div class="mt-2 flex justify-between">
+            <div>
+                <p class="mt-1 text-sm font-semibold text-white/80">Deposit Balance</p>
+                <h1 class="text-xl font-black">₦@Model.TotalDeposited.ToString("N2")</h1>
+            </div>
+            <div>
+                <p class="mt-1 text-sm font-semibold text-white/80">Withdrawal Balance</p>
+                <h1 class="text-xl font-black text-end">₦@Model.AvailableBalance.ToString("N2")</h1>
+            </div>
+        </div>
+        <div class="mt-3 flex justify-between">
+            <div class="w-3/6 bg-white text-center py-2 me-2 rounded-xl">
+                <a asp-controller="Deposit" asp-action="Index" class="font-semibold w-100 text-blue-950 text-center">Deposit</a>
+            </div>
+            <div class="w-3/6 bg-white text-center py-2 ms-2 rounded-xl">
+                <a asp-controller="Withdraw" asp-action="Index" class="font-semibold w-100 text-blue-950 text-center">Withdraw</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="shadow-xl px-1 mt-3 mx-3 md:px-12 lg:mx-50 flex items-center justify-around py-5 bg-white rounded-xl">
+        <a asp-controller="Deposit" asp-action="Index" class="flex flex-col items-center gap-1 text-gray-700">
+            <div class="bg-blue-950 rounded-xl"><span class="material-symbols-rounded icon-fill text-blue-200 p-3">account_balance_wallet</span></div>
+            <span class="text-sm font-medium">Deposit</span>
+        </a>
+        <a asp-controller="Withdraw" asp-action="Index" class="flex flex-col items-center gap-1 text-gray-700">
+            <div class="bg-blue-950 rounded-xl"><span class="material-symbols-rounded icon-fill text-blue-200 p-4">request_quote</span></div>
+            <span class="text-sm font-medium">Withdraw</span>
+        </a>
+        <a asp-controller="Transactions" asp-action="Index" class="flex flex-col items-center gap-1 text-gray-700">
+            <div class="bg-blue-950 rounded-xl"><span class="material-symbols-rounded icon-fill text-blue-200 p-4">history</span></div>
+            <span class="text-sm font-medium">History</span>
+        </a>
+        <a asp-controller="Bank" asp-action="Index" class="flex flex-col items-center gap-1 text-gray-700">
+            <div class="bg-blue-950 rounded-xl"><span class="material-symbols-rounded icon-fill text-blue-200 p-4">account_balance</span></div>
+            <span class="text-sm font-medium">Bank</span>
+        </a>
+    </div>
+
+    <div class="mt-7 mx-2 md:mx-12 lg:mx-50 p-7 px-3 md:p-6 lg:p-4">
+        <h1 class="text-lg font-black text-gray-700">Available Products</h1>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 pt-3">
+            @foreach (var plan in Model.Plans)
+            {
+                <div class="px-3 py-4 bg-white rounded-lg shadow-xl">
+                    <div class="flex justify-between">
+                        <h1 class="font-bold text-gray-700">@plan.Name</h1>
+                        <small class="bg-green-500 text-[10px] text-white font-semibold p-1 rounded">Valid for @plan.DurationDays days</small>
+                    </div>
+                    <div class="flex px-1 pt-2">
+                        <div class="h-25 w-30">
+                            <img src="~/assets/growth.jpg" alt="invest" class="h-30 w-35 rounded-xl">
+                        </div>
+                        <div class="grid grid-cols-2 ps-2">
+                            <div class="me-15">
+                                <p class="text-sm font-medium text-gray-400">Minimum</p>
+                                <h3 class="text-md font-bold text-gray-700">₦@plan.MinimumAmount.ToString("N0")</h3>
+                            </div>
+                            <div class="ms-13 text-end">
+                                <p class="text-sm font-medium text-gray-400">Maximum</p>
+                                <h3 class="text-md font-bold text-gray-700">₦@plan.MaximumAmount.ToString("N0")</h3>
+                            </div>
+                            <div class="me-13">
+                                <p class="text-sm font-medium text-gray-400">Return</p>
+                                <h3 class="text-md font-bold text-gray-700">@plan.ReturnValue%</h3>
+                            </div>
+                            <div class="ms-10 text-end">
+                                <p class="text-sm font-medium text-gray-400">Duration</p>
+                                <h3 class="text-md font-bold text-gray-700">@plan.DurationDays days</h3>
+                            </div>
+                            <div class="me-13 mt-3">
+                                <h1 class="text-xl font-black text-blue-950">₦@plan.MinimumAmount.ToString("N0")</h1>
+                            </div>
+                            <div class="ms-10 text-end mt-3">
+                                <button type="button" class="invest-open-btn bg-blue-950 hover:bg-blue-950 text-white font-semibold text-sm px-5 py-1 rounded-2xl transition"
+                                        data-plan-id="@plan.Id" data-plan-name="@plan.Name">
+                                    Invest
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</main>
+
+<!-- Real form POST — full page submit, no JS/fetch involved in the actual investment -->
+<div id="investmentModal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/50 px-4">
+    <div class="w-full max-w-md rounded-xl bg-white p-6">
+        <div class="flex items-center justify-between">
+            <h2 id="modalPlanName" class="text-xl font-bold text-gray-800">Investment Plan</h2>
+            <button type="button" id="closeInvestmentModal" class="text-2xl font-bold text-gray-500">&times;</button>
+        </div>
+        <form asp-controller="Investments" asp-action="Create" method="post" class="mt-5">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="InvestmentPlanId" id="modalPlanId" value="" />
+            <p class="text-gray-500">Amount</p>
+            <input name="Amount" type="number" class="mt-2 w-full rounded-lg border p-3" placeholder="Enter investment amount" required>
+            <button type="submit" class="mt-5 w-full rounded-lg bg-blue-950 py-3 font-semibold text-white">
+                Confirm Investment
+            </button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // JS here only toggles the modal's visibility — it never talks to the server.
+        // Submitting the form is a normal HTML POST handled entirely by InvestmentsController.
+        const investmentModal = document.getElementById("investmentModal");
+        const modalPlanName = document.getElementById("modalPlanName");
+        const modalPlanId = document.getElementById("modalPlanId");
+
+        document.querySelectorAll(".invest-open-btn").forEach(btn => {
+            btn.addEventListener("click", function () {
+                modalPlanName.textContent = this.dataset.planName;
+                modalPlanId.value = this.dataset.planId;
+                investmentModal.classList.remove("hidden");
+                investmentModal.classList.add("flex");
+            });
+        });
+
+        document.getElementById("closeInvestmentModal").addEventListener("click", () => {
+            investmentModal.classList.add("hidden");
+            investmentModal.classList.remove("flex");
+        });
+        investmentModal.addEventListener("click", (e) => {
+            if (e.target === investmentModal) {
+                investmentModal.classList.add("hidden");
+                investmentModal.classList.remove("flex");
+            }
+        });
+    </script>
+}

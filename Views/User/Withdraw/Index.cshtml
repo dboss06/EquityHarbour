@@ -1,0 +1,100 @@
+﻿@model EquityHarbour.Models.ViewModels.WithdrawViewModel
+@{
+    ViewData["Title"] = "Withdraw";
+}
+
+<nav class="fixed top-0 left-0 w-full bg-white shadow-gray-100 z-50">
+    <div class="flex items-center justify-between px-8 md:px-12 lg:px-50 py-2">
+        <div class="flex items-center gap-3">
+            <a asp-controller="Home" asp-action="Index" class="flex flex-col items-center gap-1 text-blue-950">
+                <span class="material-symbols-rounded icon-fill">arrow_back_ios</span>
+            </a>
+        </div>
+        <div class="text-center">
+            <h1 class="text-lg font-medium text-gray-700">Withdraw</h1>
+        </div>
+        <div class="flex items-center gap-1.5 text-sm font-medium px-3 py-1 rounded-full">
+            <a asp-controller="Transactions" asp-action="Index" class="text-md font-medium text-blue-950">History</a>
+        </div>
+    </div>
+</nav>
+
+<main class="pt-10 pb-20 min-h-screen bg-gray-100">
+    <div class="mt-2 mx-2 md:mx-12 lg:mx-75 bg-gradient-to-b from-blue-900 to-blue-950 text-white rounded-xl p-7 px-3 md:p-6 lg:p-3 shadow-sm">
+        <div class="pb-1">
+            <p class="mt-1 text-sm font-medium text-gray-300">Available Balance</p>
+            <h1 class="text-2xl font-bold">₦@Model.CurrentBalance.ToString("N2")</h1>
+        </div>
+    </div>
+
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div class="mt-2 mx-2 md:mx-12 lg:mx-75 rounded-lg bg-red-50 text-red-700 text-sm px-4 py-2">
+            <div asp-validation-summary="All"></div>
+        </div>
+    }
+
+    <form asp-controller="Withdraw" asp-action="Create" method="post" class="mt-2 mx-2 md:mx-12 lg:mx-75 bg-white rounded-xl shadow-sm">
+        @Html.AntiForgeryToken()
+
+        <div class="p-3">
+            <h1 class="p-2 mt-1 text-md font-medium text-gray-500">Enter Amount:</h1>
+            <div class="px-2 flex border-b border-gray-400 items-center transition-colors focus-within:border-blue-950">
+                <span class="p-1 m-3 text-2xl font-bold text-gray-700">₦</span>
+                <input asp-for="Amount" type="number" placeholder="Enter Amount"
+                       class="text-lg focus:placeholder:text-gray-500 p-3 w-full border-0 bg-transparent py-2 outline-none placeholder:text-gray-400">
+            </div>
+            <span asp-validation-for="Amount" class="text-xs text-red-600 px-2"></span>
+        </div>
+        @if (!string.IsNullOrEmpty(Model.BankName))
+        {
+            <p class="px-2 pb-2 text-xs text-gray-400">Using your saved bank account. Edit below if you want to withdraw elsewhere.</p>
+        }
+        <div class="p-4 border-t border-gray-100">
+            <h1 class="p-2 text-sm font-medium text-gray-800">Bank Details</h1>
+
+            <div class="px-2 py-1">
+                <label asp-for="BankName" class="block text-xs font-medium text-gray-500 px-1">Bank Name</label>
+                <input asp-for="BankName" type="text" placeholder="Enter bank name"
+                       class="mt-1 w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-blue-950">
+                <span asp-validation-for="BankName" class="text-xs text-red-600"></span>
+            </div>
+
+            <div class="px-2 py-1 mt-2">
+                <label asp-for="AccountNumber" class="block text-xs font-medium text-gray-500 px-1">Account Number</label>
+                <input asp-for="AccountNumber" type="text" inputmode="numeric" placeholder="Enter account number"
+                       class="mt-1 w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-blue-950">
+                <span asp-validation-for="AccountNumber" class="text-xs text-red-600"></span>
+            </div>
+
+            <div class="px-2 py-1 mt-2">
+                <label asp-for="AccountName" class="block text-xs font-medium text-gray-500 px-1">Account Name</label>
+                <input asp-for="AccountName" type="text" placeholder="Enter account name"
+                       class="mt-1 w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-blue-950">
+                <span asp-validation-for="AccountName" class="text-xs text-red-600"></span>
+            </div>
+
+            <div class="mx-4 mt-5 sm:mx-8 md:mx-16 lg:mx-40">
+                <button type="submit"
+                        class="flex w-full justify-center rounded-lg bg-blue-950 px-4 py-3 hover:bg-blue-900">
+                    <span class="text-center text-sm font-bold text-white transition sm:text-base">
+                        Request Withdrawal
+                    </span>
+                </button>
+            </div>
+        </div>
+    </form>
+
+    <div class="mt-2 mx-2 md:mx-12 lg:mx-75 bg-white rounded-xl shadow-sm">
+        <div class="p-2">
+            <h1 class="pt-3 pb-2 px-3 text-lg font-extrabold text-gray-800">Instructions</h1>
+            <p class="px-3 mb-2 text-md font-medium text-gray-800"><i class="fa-solid fa-circle-check" style="color: #2ecc71;"></i> Your requested amount is held from your available balance while the withdrawal is reviewed.</p>
+            <p class="px-3 mb-2 text-md font-medium text-gray-800"><i class="fa-solid fa-circle-check" style="color: #2ecc71;"></i> Double-check your bank details — incorrect details may delay or fail your payout.</p>
+            <p class="px-3 mb-2 text-md font-medium text-gray-800"><i class="fa-solid fa-circle-check" style="color: #2ecc71;"></i> If your withdrawal is rejected, the amount is returned to your available balance.</p>
+        </div>
+    </div>
+</main>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
