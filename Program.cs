@@ -19,7 +19,7 @@ Log.Logger = new LoggerConfiguration().ReadFrom.Configuration(builder.Configurat
     retainedFileCountLimit: 30).CreateLogger();
 builder.Host.UseSerilog();
 
-builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 {
