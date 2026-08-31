@@ -4,5 +4,6 @@
     {
         Task<int> ProcessPendingPayoutsAsync(long investmentId);
         Task<int> ProcessAllPendingPayoutsAsync();
+        Task<int> UnlockDuePayoutsAsync();
     }
 }

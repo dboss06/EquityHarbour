@@ -64,6 +64,7 @@ builder.Services.AddScoped<IReferralService, ReferralService>();
 builder.Services.AddScoped<IBankAccountService, BankAccountService>();
 builder.Services.AddScoped<IGiftCodeService, GiftCodeService>();
 builder.Services.AddScoped<ITaskService, TaskService>();
+builder.Services.AddScoped<IWithdrawalLimitService, WithdrawalLimitService>();
 builder.Services.AddHostedService<InvestmentProcessingService>();
 builder.Services.AddCors(options =>
 {

@@ -16,5 +16,7 @@ namespace EquityHarbour.Services
                 string? description = null
             );
         Task CreditAsync(int walletId, decimal amount, WalletTransactionType transactionType, string description, string? reference = null);
+        Task CreditLockedAsync(int walletId, decimal amount, WalletTransactionType transactionType, string description, string reference, DateTime unlockAt);
+        Task UnlockFundsAsync(int walletId, decimal amount, string reference);
     }
 }

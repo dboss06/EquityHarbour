@@ -12,19 +12,22 @@ namespace EquityHarbour.Services
         private readonly ApplicationDbContext _context;
         private readonly ILogger<AuthService> _logger;
         private readonly IReferralService _referralService;
+        private readonly IWalletService _walletService;
 
         public AuthService(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             ILogger<AuthService> logger,
             ApplicationDbContext context,
-            IReferralService referralService)
+            IReferralService referralService,
+            IWalletService walletService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _context = context;
             _logger = logger;
             _referralService = referralService;
+            _walletService = walletService;
         }
 
         public async Task<IdentityResult> RegisterAsync(RegisterRequest request)
@@ -64,6 +67,7 @@ namespace EquityHarbour.Services
             };
             _context.Wallets.Add(wallet);
             await _context.SaveChangesAsync();
+            await _walletService.CreditAsync(wallet.Id, 2000m, WalletTransactionType.RegistrationBonus, "Welcome bonus");
             _logger.LogInformation("New user registered. UserId: {UserId}", user.Id);
             return result;
         }

@@ -19,7 +19,7 @@ namespace EquityHarbour.Models.ViewModels
         [Required(ErrorMessage = "Account number is required.")]
         [StringLength(10, MinimumLength = 10, ErrorMessage = "Account number must be 10 digits.")]
         public string AccountNumber { get; set; } = string.Empty;
-
+        public decimal LockedBalance { get; set; }
         public string? Description { get; set; }
     }
 }

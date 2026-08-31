@@ -36,7 +36,8 @@ namespace EquityHarbour.Controllers
 
             var model = new WithdrawViewModel
             {
-                CurrentBalance = wallet?.AvailableBalance ?? 0
+                CurrentBalance = wallet?.AvailableBalance ?? 0,
+                LockedBalance = wallet?.LockedBalance ?? 0
             };
 
             if (savedAccount != null)
@@ -66,6 +67,7 @@ namespace EquityHarbour.Controllers
             if (!ModelState.IsValid)
             {
                 model.CurrentBalance = wallet?.AvailableBalance ?? 0;
+                model.LockedBalance = wallet?.LockedBalance ?? 0;
                 return View("Index", model);
             }
 
@@ -86,6 +88,7 @@ namespace EquityHarbour.Controllers
             {
                 ModelState.AddModelError(string.Empty, ex.Message);
                 model.CurrentBalance = wallet?.AvailableBalance ?? 0;
+                model.LockedBalance = wallet?.LockedBalance ?? 0;
                 return View("Index", model);
             }
         }

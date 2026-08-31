@@ -44,8 +44,8 @@ namespace EquityHarbour.Controllers
                 AvailableBalance = wallet.AvailableBalance,
                 InvestedBalance = wallet.InvestedBalance,
                 TotalDeposited = wallet.TotalDeposited,
-                Plans = plans.Select(p => new InvestmentPlanViewModel
-                {
+                LockedBalance = wallet.LockedBalance,
+                Plans = plans.Select(p => new InvestmentPlanViewModel { 
                     Id = p.Id,
                     Name = p.Name,
                     DurationDays = p.DurationDays,

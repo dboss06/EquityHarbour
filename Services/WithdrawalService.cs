@@ -8,15 +8,31 @@ namespace EquityHarbour.Services
 {
     public class WithdrawalService : IWithdrawalService
     {
-        private readonly ApplicationDbContext _context;
-        public WithdrawalService(ApplicationDbContext context)
+        private readonly ApplicationDbContext _context; 
+        private readonly IWithdrawalLimitService _limitService;
+
+        public WithdrawalService(ApplicationDbContext context, IWithdrawalLimitService limitService)
         {
             _context = context;
+            _limitService = limitService;
         }
 
         public async Task<WithdrawalDto> CreateAsync(string userId, CreateWithdrawalRequest request)
         {
-            if(request.Amount <= 0)
+            var totalInvested = await _context.Investments
+                .Where(i => i.UserId == userId)
+                .SumAsync(i => (decimal?)i.PrincipalAmount) ?? 0;
+
+            var tier = await _limitService.GetApplicableTierAsync(totalInvested);
+            if (tier == null)
+            {
+                throw new InvalidOperationException("You need to invest before you can request a withdrawal.");
+            }
+            if (request.Amount < tier.MinWithdrawalAmount || request.Amount > tier.MaxWithdrawalAmount)
+            {
+                throw new InvalidOperationException($"Based on your investment history, withdrawals must be between ₦{tier.MinWithdrawalAmount:N2} and ₦{tier.MaxWithdrawalAmount:N2}.");
+            }
+            if (request.Amount <= 0)
             {
                 throw new ArgumentException("Withdrawal amount must be greater than zero.");
             }

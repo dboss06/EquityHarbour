@@ -1,0 +1,73 @@
+﻿@model List<EquityHarbour.DTOs.WithdrawalLimits.WithdrawalLimitTierDto>
+
+<div class="flex justify-end mb-4">
+    <a asp-controller="WithdrawalLimits" asp-action="Create"
+        class="inline-flex items-center gap-2 bg-blue-950 text-white text-sm font-semibold px-4 py-2 rounded-lg hover:bg-blue-900">
+        <i class="fa-solid fa-plus"></i> Add Tier
+    </a>
+</div>
+
+<div class="bg-white rounded-xl shadow-sm overflow-hidden">
+    @if (Model.Any())
+    {
+        <table class="w-full text-sm">
+            <thead class="bg-gray-50">
+                <tr class="text-left text-gray-400 text-xs uppercase">
+                    <th class="px-5 py-3">Invested Range</th>
+                    <th class="px-3 py-3">Withdrawal Range</th>
+                    <th class="px-3 py-3">Status</th>
+                    <th class="px-5 py-3 text-center">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var t in Model)
+                {
+                    <tr class="border-t border-gray-100">
+                        <td class="px-5 py-3 text-gray-800">
+                            ₦@t.MinInvestedAmount.ToString("N0") &ndash; @(t.MaxInvestedAmount.HasValue ? $"₦{t.MaxInvestedAmount:N0}" : "No limit")
+                        </td>
+                        <td class="px-3 py-3 font-bold text-gray-800">
+                            ₦@t.MinWithdrawalAmount.ToString("N0") &ndash; ₦@t.MaxWithdrawalAmount.ToString("N0")
+                        </td>
+                        <td class="px-3 py-3">
+                            @if (t.IsActive)
+                            {
+                                <span class="text-xs font-bold text-green-600 bg-green-50 px-2 py-1 rounded-full">Active</span>
+                            }
+                            else
+                            {
+                                <span class="text-xs font-bold text-gray-500 bg-gray-100 px-2 py-1 rounded-full">Inactive</span>
+                            }
+                        </td>
+                        <td class="px-5 py-3">
+                            <div class="flex items-center justify-center gap-2">
+                                <form asp-controller="WithdrawalLimits" asp-action="ToggleActive" asp-route-id="@t.Id" method="post">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit"
+                                        class="w-8 h-8 flex items-center justify-center rounded-lg border @(t.IsActive ? "border-yellow-500 text-yellow-500 hover:bg-yellow-50" : "border-green-600 text-green-600 hover:bg-green-50")">
+                                        <i class="fa-solid @(t.IsActive ? "fa-pause" : "fa-play") text-xs"></i>
+                                    </button>
+                                </form>
+                                <form asp-controller="WithdrawalLimits" asp-action="Delete" asp-route-id="@t.Id" method="post"
+                                    onsubmit="return confirm('Delete this tier?');">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="w-8 h-8 flex items-center justify-center rounded-lg border border-red-500 text-red-500 hover:bg-red-50">
+                                        <i class="fa-solid fa-trash text-xs"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div class="text-center py-12">
+            <i class="fa-solid fa-sliders text-4xl text-gray-300"></i>
+            <p class="mt-3 font-bold text-gray-600">No Withdrawal Tiers</p>
+            <p class="text-sm text-gray-400">Without a tier, no user can withdraw at all.</p>
+        </div>
+    }
+</div>

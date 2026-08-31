@@ -7,6 +7,7 @@
         public decimal InvestedBalance { get; set; }
         public decimal TotalDeposited { get; set; }
         public decimal TotalBalance => AvailableBalance + InvestedBalance;
+        public decimal LockedBalance { get; set; }
         public List<InvestmentPlanViewModel> Plans { get; set; } = new();
     }
 

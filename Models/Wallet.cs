@@ -5,6 +5,7 @@
         public int Id { get; set; }
         public decimal AvailableBalance { get; set; }
         public decimal InvestedBalance { get; set; }
+        public decimal LockedBalance { get; set; }
         public decimal TotalDeposited { get; set; }
         public decimal TotalWithdrawn { get; set; }
         public decimal TotalProfit { get; set; }

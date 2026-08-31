@@ -50,7 +50,30 @@ namespace EquityHarbour.Services
                 await using var transaction = await _context.Database.BeginTransactionAsync();
                 try
                 {
-                    await _walletService.CreditAsync(walletId: await GetWalletIdAsync(investment.UserId), amount: amount, transactionType:WalletTransactionType.Profit, description:$"Investment payout for investment #{investment.Id}", reference:$"PAYOUT-{investment.Id}-{Guid.NewGuid():N}");
+                    var freeWindowEnd = investment.StartedAt!.Value.AddDays(2);
+                    DateTime? unlockAt = null;
+
+                    if (period.End > freeWindowEnd)
+                    {
+                        var daysSinceFreeWindow = (period.End - freeWindowEnd).TotalDays;
+                        var weeksElapsed = Math.Ceiling(daysSinceFreeWindow / 7.0);
+                        unlockAt = freeWindowEnd.AddDays(weeksElapsed * 7);
+                    }
+
+                    var walletId = await GetWalletIdAsync(investment.UserId);
+                    var reference = $"PAYOUT-{investment.Id}-{Guid.NewGuid():N}";
+
+                    if (unlockAt == null)
+                    {
+                        await _walletService.CreditAsync(walletId, amount, WalletTransactionType.Profit,
+                            $"Investment payout for investment #{investment.Id}", reference);
+                    }
+                    else
+                    {
+                        await _walletService.CreditLockedAsync(walletId, amount, WalletTransactionType.Profit,
+                            $"Investment payout for investment #{investment.Id} (unlocks {unlockAt:MMM d, yyyy})", reference, unlockAt.Value);
+                    }
+
                     var payout = new InvestmentPayout
                     {
                         InvestmentId = investment.Id,
@@ -58,7 +81,10 @@ namespace EquityHarbour.Services
                         Frequency = investment.PayoutFrequency,
                         PeriodStart = period.Start,
                         PeriodEnd = period.End,
-                        PaidAt = now
+                        PaidAt = now,
+                        UnlockAt = unlockAt,
+                        Unlocked = unlockAt == null,
+                        Reference = reference
                     };
                     _context.InvestmentPayouts.Add(payout);
                     await _context.SaveChangesAsync();
@@ -83,6 +109,30 @@ namespace EquityHarbour.Services
                 totalProcessed += await ProcessPendingPayoutsAsync(investmentId);
             }
             return totalProcessed;
+        }
+        public async Task<int> UnlockDuePayoutsAsync()
+        {
+            var now = DateTime.UtcNow;
+            var duePayouts = await _context.InvestmentPayouts
+                .Include(p => p.Investment)
+                .Where(p => !p.Unlocked && p.UnlockAt != null && p.UnlockAt <= now)
+                .ToListAsync();
+
+            var unlockedCount = 0;
+            foreach (var payout in duePayouts)
+            {
+                var walletId = await GetWalletIdAsync(payout.Investment.UserId);
+                await _walletService.UnlockFundsAsync(walletId, payout.Amount, payout.Reference!);
+                payout.Unlocked = true;
+                unlockedCount++;
+            }
+
+            if (unlockedCount > 0)
+            {
+                await _context.SaveChangesAsync();
+            }
+
+            return unlockedCount;
         }
         private async Task<int> GetWalletIdAsync(string userId)
         {

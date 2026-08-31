@@ -82,6 +82,13 @@ namespace EquityHarbour.Services
                     payoutsProcessed);
             }
 
+            // Unlock any previously-locked payouts that are now due.
+            var unlockedCount = await payoutService.UnlockDuePayoutsAsync();
+            if (unlockedCount > 0)
+            {
+                _logger.LogInformation("Unlocked {Count} previously-locked investment payouts.", unlockedCount);
+            }
+
             // Process matured investments.
             var maturedInvestments =
                 await investmentService

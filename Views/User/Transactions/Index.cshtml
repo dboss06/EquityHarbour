@@ -93,7 +93,15 @@
                                     <i class="fa-regular fa-clock"></i>
                                     <span>@tx.CreatedAt.ToRelativeString()</span>
                                 </div>
-                                <div class="font-semibold @StatusClass(tx.Status) capitalize">@tx.Status.ToLower()</div>
+                                <div class="flex items-center gap-2">
+                                    <span class="font-semibold @StatusClass(tx.Status) capitalize">@tx.Status.ToLower()</span>
+                                    @if (tx.IsLocked)
+                                    {
+                                        <span class="text-[10px] font-bold text-yellow-700 bg-yellow-50 px-1.5 py-0.5 rounded" title="Unlocks @tx.UnlockAt?.ToString("MMM d, yyyy")">
+                                            <i class="fa-solid fa-lock"></i> Locked
+                                        </span>
+                                    }
+                                </div>
                             </div>
                         </div>
                         <div class="pt-2.5">

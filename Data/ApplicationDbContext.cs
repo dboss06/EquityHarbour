@@ -19,6 +19,7 @@ namespace EquityHarbour.Data
         public DbSet<BankAccount> BankAccounts { get; set; }
         public DbSet<GiftCode> GiftCodes { get; set; }
         public DbSet<TaskClaim> TaskClaims { get; set; }
+        public DbSet<WithdrawalLimitTier> WithdrawalLimitTiers { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
@@ -216,6 +217,10 @@ namespace EquityHarbour.Data
             builder.Entity<Wallet>()
                 .Property(w => w.RowVersion)
                 .IsRowVersion();
+
+            builder.Entity<Wallet>()
+                .Property(w => w.LockedBalance)
+                .HasPrecision(18, 2);
         }
 
     }

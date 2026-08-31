@@ -10,5 +10,6 @@ public enum WalletTransactionType
     Fee = 6,
     ReferralCommission = 7,
     GiftCode = 8,
-    TaskReward = 9
+    TaskReward = 9,
+    RegistrationBonus = 10
 }

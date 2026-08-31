@@ -8,6 +8,8 @@
         public string Status { get; set; } = string.Empty;
         public string? Reference { get; set; }
         public string? Description { get; set; }
+        public bool IsLocked { get; set; }
+        public DateTime? UnlockAt { get; set; }
         public DateTime CreatedAt { get; set; }
     }
 }
