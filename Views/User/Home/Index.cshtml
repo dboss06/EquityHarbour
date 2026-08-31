@@ -22,7 +22,19 @@
         </div>
     </div>
 </nav>
+@if (TempData["Success"] != null)
+{
+    <div class="mx-3 mt-4 rounded-lg bg-green-100 p-4 text-green-700">
+        @TempData["Success"]
+    </div>
+}
 
+@if (TempData["Error"] != null)
+{
+    <div class="mx-3 mt-4 rounded-lg bg-red-100 p-4 text-red-700">
+        @TempData["Error"]
+    </div>
+}
 <main class="pt-16 pb-16 min-h-screen bg-gray-100">
     <div class="mt-7 mx-2 md:mx-12 lg:mx-50 bg-gradient-to-b from-blue-950 to-blue-900 text-white rounded-xl p-7 px-3 md:p-6 lg:p-3 shadow-xl">
         <div class="pb-7 border-dashed border-b-1 border-white">
