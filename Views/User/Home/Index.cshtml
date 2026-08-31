@@ -22,19 +22,7 @@
         </div>
     </div>
 </nav>
-@if (TempData["Success"] != null)
-{
-    <div class="mx-3 mt-4 rounded-lg bg-green-100 p-4 text-green-700">
-        @TempData["Success"]
-    </div>
-}
 
-@if (TempData["Error"] != null)
-{
-    <div class="mx-3 mt-4 rounded-lg bg-red-100 p-4 text-red-700">
-        @TempData["Error"]
-    </div>
-}
 <main class="pt-16 pb-16 min-h-screen bg-gray-100">
     <div class="mt-7 mx-2 md:mx-12 lg:mx-50 bg-gradient-to-b from-blue-950 to-blue-900 text-white rounded-xl p-7 px-3 md:p-6 lg:p-3 shadow-xl">
         <div class="pb-7 border-dashed border-b-1 border-white">
@@ -71,7 +59,7 @@
             </div>
         </div>
     </div>
-
+    
     <div class="shadow-xl px-1 mt-3 mx-3 md:px-12 lg:mx-50 flex items-center justify-around py-5 bg-white rounded-xl">
         <a asp-controller="Deposit" asp-action="Index" class="flex flex-col items-center gap-1 text-gray-700">
             <div class="bg-blue-950 rounded-xl"><span class="material-symbols-rounded icon-fill text-blue-200 p-3">account_balance_wallet</span></div>
@@ -90,7 +78,19 @@
             <span class="text-sm font-medium">Bank</span>
         </a>
     </div>
+    @if (TempData["Success"] != null)
+    {
+        <div class="mx-3 mt-4 rounded-lg bg-green-100 p-4 text-green-700">
+            @TempData["Success"]
+        </div>
+    }
 
+    @if (TempData["Error"] != null)
+    {
+        <div class="mx-3 mt-4 rounded-lg bg-red-100 p-4 text-red-700">
+            @TempData["Error"]
+        </div>
+    }
     <div class="mt-7 mx-2 md:mx-12 lg:mx-50 p-7 px-3 md:p-6 lg:p-4">
         <h1 class="text-lg font-black text-gray-700">Available Products</h1>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 pt-3">
