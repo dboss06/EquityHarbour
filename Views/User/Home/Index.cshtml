@@ -136,9 +136,9 @@
         </div>
         <form asp-controller="Investments" asp-action="Create" method="post" class="mt-5">
             @Html.AntiForgeryToken()
-            <input type="hidden" name="InvestmentPlanId" id="modalPlanId" value="" />
+            <input type="hidden" name="planId" id="modalPlanId" value="" />
             <p class="text-gray-500">Amount</p>
-            <input name="Amount" type="number" class="mt-2 w-full rounded-lg border p-3" placeholder="Enter investment amount" required>
+            <input name="amount" type="number" class="mt-2 w-full rounded-lg border p-3" placeholder="Enter investment amount" required>
             <button type="submit" class="mt-5 w-full rounded-lg bg-blue-950 py-3 font-semibold text-white">
                 Confirm Investment
             </button>
