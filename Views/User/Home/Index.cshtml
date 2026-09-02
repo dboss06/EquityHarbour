@@ -137,6 +137,34 @@
             }
         </div>
     </div>
+    <!-- Join channels modal -->
+    <div id="joinChannelsModal" class="fixed inset-0 z-[110] flex items-center justify-center bg-black/50 px-4">
+        <div class="w-full max-w-sm rounded-xl bg-white p-6 text-center">
+            <div class="w-14 h-14 mx-auto rounded-full bg-blue-50 flex items-center justify-center">
+                <i class="fa-solid fa-bullhorn text-2xl text-blue-950"></i>
+            </div>
+            <h2 class="mt-4 text-lg font-bold text-gray-800">Stay Connected!</h2>
+            <p class="mt-2 text-sm text-gray-500">
+                Join our official WhatsApp and Telegram channels for updates, announcements, and support.
+            </p>
+
+            <div class="mt-5 flex flex-col gap-3">
+                <a href="https://whatsapp.com/channel/0029Vb8oZ6WHltYDm6fMKL2f" target="_blank" rel="noopener noreferrer"
+                   class="flex items-center justify-center gap-2 rounded-lg bg-green-600 py-3 text-sm font-bold text-white hover:bg-green-700">
+                    <i class="fa-brands fa-whatsapp text-lg"></i> Join WhatsApp Channel
+                </a>
+                <a href="https://t.me/+nXTV2yAHbMyMjA0" target="_blank" rel="noopener noreferrer"
+                   class="flex items-center justify-center gap-2 rounded-lg bg-blue-500 py-3 text-sm font-bold text-white hover:bg-blue-600">
+                    <i class="fa-brands fa-telegram text-lg"></i> Join Telegram Channel
+                </a>
+            </div>
+
+            <button type="button" id="closeJoinChannelsModal"
+                    class="mt-4 text-xs font-semibold text-gray-400 hover:text-gray-600">
+                Maybe later
+            </button>
+        </div>
+    </div>
 </main>
 
 <!-- Real form POST — full page submit, no JS/fetch involved in the actual investment -->
@@ -165,7 +193,9 @@
         const investmentModal = document.getElementById("investmentModal");
         const modalPlanName = document.getElementById("modalPlanName");
         const modalPlanId = document.getElementById("modalPlanId");
-
+                document.getElementById("closeJoinChannelsModal").addEventListener("click", function () {
+            document.getElementById("joinChannelsModal").remove();
+        });
         document.querySelectorAll(".invest-open-btn").forEach(btn => {
             btn.addEventListener("click", function () {
                 modalPlanName.textContent = this.dataset.planName;
