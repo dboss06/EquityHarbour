@@ -14,15 +14,18 @@ namespace EquityHarbour.Areas.Admin.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IWalletService _walletService;
         private readonly IInvestmentService _investmentService;
+        private readonly IReferralService _referralService;
 
         public UsersController(
             UserManager<ApplicationUser> userManager,
             IWalletService walletService,
-            IInvestmentService investmentService)
+            IInvestmentService investmentService,
+            IReferralService referralService)
         {
             _userManager = userManager;
             _walletService = walletService;
             _investmentService = investmentService;
+            _referralService = referralService;
         }
 
         public async Task<IActionResult> Index()
@@ -70,6 +73,9 @@ namespace EquityHarbour.Areas.Admin.Controllers
             var wallet = await _walletService.GetUserWalletAsync(user.Id);
             var investments = await _investmentService.GetUserInvestmentsAsync(user.Id);
             var transactions = await _walletService.GetTransactionsAsync(user.Id);
+            var directReferrals = await _referralService.GetDirectReferralsAsync(user.Id);
+            var secondLevelReferrals = await _referralService.GetSecondLevelReferralsAsync(user.Id);
+            var thirdLevelReferrals = await _referralService.GetThirdLevelReferralsAsync(user.Id);
 
             var model = new UserDetailsViewModel
             {
@@ -80,9 +86,11 @@ namespace EquityHarbour.Areas.Admin.Controllers
                 IsActive = user.IsActive,
                 WalletBalance = wallet?.AvailableBalance ?? 0,
                 Investments = investments,
-                Transactions = transactions
+                Transactions = transactions,
+                DirectReferrals = directReferrals,
+                SecondLevelReferrals = secondLevelReferrals,
+                ThirdLevelReferrals = thirdLevelReferrals
             };
-
             return View(model);
         }
 

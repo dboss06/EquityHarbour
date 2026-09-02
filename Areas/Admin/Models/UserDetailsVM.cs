@@ -1,5 +1,6 @@
 ﻿using EquityHarbour.DTOs;
 using EquityHarbour.DTOs.Investments;
+using EquityHarbour.Models;
 
 namespace EquityHarbour.Areas.Admin.Models
 {
@@ -13,5 +14,8 @@ namespace EquityHarbour.Areas.Admin.Models
         public decimal WalletBalance { get; set; }
         public List<InvestmentDto> Investments { get; set; } = new();
         public List<WalletTransactionDTO> Transactions { get; set; } = new();
+        public List<ApplicationUser> DirectReferrals { get; set; } = new();
+        public List<ApplicationUser> SecondLevelReferrals { get; set; } = new();
+        public List<ApplicationUser> ThirdLevelReferrals { get; set; } = new();
     }
 }
