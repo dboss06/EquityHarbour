@@ -38,6 +38,7 @@ namespace EquityHarbour.Services
                 MaxInvestedAmount = request.MaxInvestedAmount,
                 MinWithdrawalAmount = request.MinWithdrawalAmount,
                 MaxWithdrawalAmount = request.MaxWithdrawalAmount,
+                MinReferralCount = request.MinReferralCount,
                 IsActive = true,
                 CreatedAt = DateTime.UtcNow
             };
@@ -85,7 +86,8 @@ namespace EquityHarbour.Services
             MaxInvestedAmount = t.MaxInvestedAmount,
             MinWithdrawalAmount = t.MinWithdrawalAmount,
             MaxWithdrawalAmount = t.MaxWithdrawalAmount,
-            IsActive = t.IsActive
+            IsActive = t.IsActive,
+            MinReferralCount = t.MinReferralCount,
         };
     }
 }

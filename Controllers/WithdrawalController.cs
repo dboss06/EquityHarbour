@@ -15,19 +15,39 @@ namespace EquityHarbour.Controllers
         private readonly IWalletService _walletService;
         private readonly IWithdrawalService _withdrawalService;
         private readonly IBankAccountService _bankAccountService;
+        private readonly IInvestmentService _investmentService;
+        private readonly IWithdrawalLimitService _limitService;
+        private readonly IReferralService _referralService;
 
         public WithdrawController(
             UserManager<ApplicationUser> userManager,
             IWalletService walletService,
             IWithdrawalService withdrawalService,
-            IBankAccountService bankAccountService)
+            IInvestmentService investmentService,
+            IWithdrawalLimitService limitService,
+            IReferralService referralService)
         {
             _userManager = userManager;
             _walletService = walletService;
             _withdrawalService = withdrawalService;
-            _bankAccountService = bankAccountService;
+            _investmentService = investmentService;
+            _limitService = limitService;
+            _referralService = referralService;
         }
 
+        private async Task PopulateTierInfoAsync(WithdrawViewModel model, string userId)
+        {
+            var investments = await _investmentService.GetUserInvestmentsAsync(userId);
+            var totalInvested = investments.Sum(i => i.PrincipalAmount);
+            var tier = await _limitService.GetApplicableTierAsync(totalInvested);
+            var qualifiedReferrals = await _referralService.GetQualifiedReferralCountAsync(userId);
+
+            model.HasApplicableTier = tier != null;
+            model.RequiredReferralCount = tier?.MinReferralCount ?? 0;
+            model.QualifiedReferralCount = qualifiedReferrals;
+            model.TierMinWithdrawal = tier?.MinWithdrawalAmount;
+            model.TierMaxWithdrawal = tier?.MaxWithdrawalAmount;
+        }  
         public async Task<IActionResult> Index()
         {
             var user = await _userManager.GetUserAsync(User);
@@ -46,7 +66,7 @@ namespace EquityHarbour.Controllers
                 model.AccountNumber = savedAccount.AccountNumber;
                 model.AccountName = savedAccount.AccountName;
             }
-
+            await PopulateTierInfoAsync(model, user.Id);
             return View(model);
         }
         [HttpPost]

@@ -111,5 +111,24 @@ namespace EquityHarbour.Services
                 .Distinct()
                 .CountAsync();
         }
+        public async Task<int> GetQualifiedReferralCountAsync(string userId)
+        {
+            var directIds = await _context.Users.Where(u => u.ReferredByUserId == userId).Select(u => u.Id).ToListAsync();
+            if (!directIds.Any()) return 0;
+
+            var withDeposit = await _context.Deposits
+                .Where(d => directIds.Contains(d.UserId) && d.Status == DepositStatus.Completed)
+                .Select(d => d.UserId)
+                .Distinct()
+                .ToListAsync();
+
+            var withInvestment = await _context.Investments
+                .Where(i => directIds.Contains(i.UserId))
+                .Select(i => i.UserId)
+                .Distinct()
+                .ToListAsync();
+
+            return withDeposit.Intersect(withInvestment).Count();
+        }
     }
 }

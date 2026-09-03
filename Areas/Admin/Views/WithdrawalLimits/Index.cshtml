@@ -15,6 +15,7 @@
                 <tr class="text-left text-gray-400 text-xs uppercase">
                     <th class="px-5 py-3">Invested Range</th>
                     <th class="px-3 py-3">Withdrawal Range</th>
+                    <th class="px-3 py-3">Min. Referrals</th>
                     <th class="px-3 py-3">Status</th>
                     <th class="px-5 py-3 text-center">Actions</th>
                 </tr>
@@ -28,6 +29,9 @@
                         </td>
                         <td class="px-3 py-3 font-bold text-gray-800">
                             ₦@t.MinWithdrawalAmount.ToString("N0") &ndash; ₦@t.MaxWithdrawalAmount.ToString("N0")
+                        </td>
+                        <td class="px-3 py-3 text-gray-600">
+                            @(t.MinReferralCount > 0 ? $"{t.MinReferralCount} qualified" : "None")
                         </td>
                         <td class="px-3 py-3">
                             @if (t.IsActive)

@@ -21,5 +21,10 @@ namespace EquityHarbour.Models.ViewModels
         public string AccountNumber { get; set; } = string.Empty;
         public decimal LockedBalance { get; set; }
         public string? Description { get; set; }
+        public int RequiredReferralCount { get; set; }
+        public int QualifiedReferralCount { get; set; }
+        public decimal? TierMinWithdrawal { get; set; }
+        public decimal? TierMaxWithdrawal { get; set; }
+        public bool HasApplicableTier { get; set; }
     }
 }

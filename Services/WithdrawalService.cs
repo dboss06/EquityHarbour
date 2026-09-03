@@ -10,11 +10,13 @@ namespace EquityHarbour.Services
     {
         private readonly ApplicationDbContext _context; 
         private readonly IWithdrawalLimitService _limitService;
+        private readonly IReferralService _referralService;
 
-        public WithdrawalService(ApplicationDbContext context, IWithdrawalLimitService limitService)
+        public WithdrawalService(ApplicationDbContext context, IWithdrawalLimitService limitService, IReferralService referralService)
         {
             _context = context;
             _limitService = limitService;
+            _referralService = referralService;
         }
 
         public async Task<WithdrawalDto> CreateAsync(string userId, CreateWithdrawalRequest request)
@@ -28,6 +30,29 @@ namespace EquityHarbour.Services
             {
                 throw new InvalidOperationException("You need to invest before you can request a withdrawal.");
             }
+            if (tier.MinReferralCount > 0)
+            {
+                var qualifiedReferrals = await _referralService.GetQualifiedReferralCountAsync(userId);
+                if (qualifiedReferrals < tier.MinReferralCount)
+                {
+                    throw new InvalidOperationException($"This withdrawal tier requires at least {tier.MinReferralCount} referrals who have both deposited and invested. You currently have {qualifiedReferrals}.");
+                }
+            }
+            if (request.Amount < tier.MinWithdrawalAmount || request.Amount > tier.MaxWithdrawalAmount)
+            {
+                throw new InvalidOperationException($"Based on your investment history, withdrawals must be between ₦{tier.MinWithdrawalAmount:N2} and ₦{tier.MaxWithdrawalAmount:N2}.");
+            }
+
+
+            if (tier.MinReferralCount > 0)
+            {
+                var qualifiedReferrals = await _referralService.GetQualifiedReferralCountAsync(userId);
+                if (qualifiedReferrals < tier.MinReferralCount)
+                {
+                    throw new InvalidOperationException($"This withdrawal tier requires at least {tier.MinReferralCount} referrals who have both deposited and invested. You currently have {qualifiedReferrals}.");
+                }
+            }
+
             if (request.Amount < tier.MinWithdrawalAmount || request.Amount > tier.MaxWithdrawalAmount)
             {
                 throw new InvalidOperationException($"Based on your investment history, withdrawals must be between ₦{tier.MinWithdrawalAmount:N2} and ₦{tier.MaxWithdrawalAmount:N2}.");

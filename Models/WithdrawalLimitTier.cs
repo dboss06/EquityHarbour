@@ -7,6 +7,7 @@
         public decimal? MaxInvestedAmount { get; set; }
         public decimal MinWithdrawalAmount { get; set; }
         public decimal MaxWithdrawalAmount { get; set; }
+        public int MinReferralCount { get; set; }
         public bool IsActive { get; set; } = true;
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     }
