@@ -76,7 +76,11 @@ namespace EquityHarbour.Areas.Admin.Controllers
             var directReferrals = await _referralService.GetDirectReferralsAsync(user.Id);
             var secondLevelReferrals = await _referralService.GetSecondLevelReferralsAsync(user.Id);
             var thirdLevelReferrals = await _referralService.GetThirdLevelReferralsAsync(user.Id);
-
+            ApplicationUser? referredBy = null;
+            if (!string.IsNullOrEmpty(user.ReferredByUserId))
+            {
+                referredBy = await _userManager.FindByIdAsync(user.ReferredByUserId);
+            }
             var model = new UserDetailsViewModel
             {
                 Id = user.Id,
@@ -89,7 +93,10 @@ namespace EquityHarbour.Areas.Admin.Controllers
                 Transactions = transactions,
                 DirectReferrals = directReferrals,
                 SecondLevelReferrals = secondLevelReferrals,
-                ThirdLevelReferrals = thirdLevelReferrals
+                ThirdLevelReferrals = thirdLevelReferrals,
+                ReferredById = referredBy?.Id,
+                ReferredByFullName = referredBy?.FullName,
+                ReferredByEmail = referredBy?.Email
             };
             return View(model);
         }

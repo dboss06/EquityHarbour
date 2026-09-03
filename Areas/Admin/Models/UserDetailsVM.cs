@@ -14,6 +14,9 @@ namespace EquityHarbour.Areas.Admin.Models
         public decimal WalletBalance { get; set; }
         public List<InvestmentDto> Investments { get; set; } = new();
         public List<WalletTransactionDTO> Transactions { get; set; } = new();
+        public string? ReferredById { get; set; }
+        public string? ReferredByFullName { get; set; }
+        public string? ReferredByEmail { get; set; }
         public List<ApplicationUser> DirectReferrals { get; set; } = new();
         public List<ApplicationUser> SecondLevelReferrals { get; set; } = new();
         public List<ApplicationUser> ThirdLevelReferrals { get; set; } = new();
