@@ -25,5 +25,7 @@
         public int WalletId { get; set; }
 
         public Wallet Wallet { get; set; } = null!;
+        public string? ProofImagePath { get; set; }
+        public string? UserProvidedReference { get; set; }
     }
 }

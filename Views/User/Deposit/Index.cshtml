@@ -40,7 +40,7 @@
         </div>
     }
 
-    <form asp-controller="Deposit" asp-action="Create" method="post" id="depositForm" class="mt-2 mx-2 md:mx-12 lg:mx-75 bg-white rounded-xl shadow-sm">
+    <form asp-controller="Deposit" asp-action="Create" method="post" id="depositForm" enctype="multipart/form-data" class="mt-2 mx-2 md:mx-12 lg:mx-75 bg-white rounded-xl shadow-sm">
         @Html.AntiForgeryToken()
 
         <div class="p-4">
@@ -73,7 +73,19 @@
                        class="text-lg focus:placeholder:text-gray-500 p-3 w-full border-0 bg-transparent py-2 outline-none placeholder:text-gray-400">
             </div>
             <span asp-validation-for="Amount" class="text-xs text-red-600 px-2"></span>
+            <div class="mt-4">
+                <label asp-for="UserProvidedReference" class="block text-sm font-medium text-gray-700 mb-1">Transfer Reference / Narration</label>
+                <input asp-for="UserProvidedReference" type="text" placeholder="e.g. the reference shown on your bank app after transfer"
+                       class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-blue-950">
+                <p class="text-xs text-gray-400 mt-1">Optional, but helps us match your transfer faster.</p>
+            </div>
 
+            <div class="mt-4">
+                <label asp-for="ProofImage" class="block text-sm font-medium text-gray-700 mb-1">Proof of Payment</label>
+                <input asp-for="ProofImage" type="file" accept=".jpg,.jpeg,.png,.webp"
+                       class="w-full text-sm text-gray-600 border border-gray-200 rounded-lg px-3 py-2">
+                <p class="text-xs text-gray-400 mt-1">Screenshot or photo of your transfer receipt (JPG, PNG or WEBP, max 5MB).</p>
+            </div>
             <div class="mx-4 mt-5 sm:mx-8 md:mx-16 lg:mx-40">
                 <button type="button" id="proceedBtn"
                         class="flex w-full justify-center rounded-lg bg-blue-950 px-4 py-3 hover:bg-blue-900">

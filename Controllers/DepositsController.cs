@@ -14,19 +14,15 @@ namespace EquityHarbour.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IWalletService _walletService;
         private readonly IDepositService _depositService;
-        private readonly IDepositAccountService _accountService;
-        
+        private readonly IDepositAccountService _accountService; private readonly IWebHostEnvironment _environment;
 
-        public DepositController(
-            UserManager<ApplicationUser> userManager,
-            IWalletService walletService,
-            IDepositService depositService,
-            IDepositAccountService accountService)
+        public DepositController(UserManager<ApplicationUser> userManager, IWalletService walletService, IDepositService depositService, IDepositAccountService accountService, IWebHostEnvironment environment)
         {
             _userManager = userManager;
             _walletService = walletService;
             _depositService = depositService;
             _accountService = accountService;
+            _environment = environment;
         }
 
         public async Task<IActionResult> Index()
@@ -58,11 +54,15 @@ namespace EquityHarbour.Controllers
 
             try
             {
+                var proofImagePath = await SaveProofImageAsync(model.ProofImage);
+
                 var deposit = await _depositService.CreateAsync(user.Id, new CreateDepositRequest
                 {
                     Amount = model.Amount,
                     Description = model.Description,
-                    DepositAccountId = accountId
+                    DepositAccountId = accountId,
+                    ProofImagePath = proofImagePath,
+                    UserProvidedReference = model.UserProvidedReference
                 });
 
                 return RedirectToAction("Pending", new
@@ -91,5 +91,33 @@ namespace EquityHarbour.Controllers
             ViewData["Name"] = name;
             return View();
         }
+        private async Task<string?> SaveProofImageAsync(IFormFile? file)
+        {
+            if (file == null) return null;
+
+            var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".webp" };
+            var extension = Path.GetExtension(file.FileName).ToLowerInvariant();
+
+            if (!allowedExtensions.Contains(extension))
+            {
+                throw new ArgumentException("Only JPG, PNG and WEBP images are allowed.");
+            }
+            if (file.Length > 5 * 1024 * 1024)
+            {
+                throw new ArgumentException("Maximum file size is 5MB.");
+            }
+
+            var uploadsFolder = Path.Combine(_environment.WebRootPath, "uploads", "deposits");
+            Directory.CreateDirectory(uploadsFolder);
+
+            var fileName = $"{Guid.NewGuid()}{extension}";
+            var filePath = Path.Combine(uploadsFolder, fileName);
+
+            using var stream = new FileStream(filePath, FileMode.Create);
+            await file.CopyToAsync(stream);
+
+            return "/uploads/deposits/" + fileName;
+        }
+
     }
-    }
+}

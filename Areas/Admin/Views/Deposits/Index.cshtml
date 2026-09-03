@@ -26,6 +26,8 @@
                     <th class="px-3 py-3">Amount</th>
                     <th class="px-3 py-3">Account</th>
                     <th class="px-3 py-3">Status</th>
+                    <th class="px-3 py-3">Reference Given</th>
+                    <th class="px-3 py-3">Proof</th>
                     <th class="px-3 py-3">Date</th>
                     <th class="px-5 py-3 text-center">Actions</th>
                 </tr>
@@ -42,6 +44,19 @@
                             <span class="text-xs font-semibold px-2 py-1 rounded-full @(d.Status == DepositStatus.Completed ? "bg-green-50 text-green-600" : d.Status == DepositStatus.Pending ? "bg-yellow-50 text-yellow-600" : "bg-red-50 text-red-600")">
                                 @d.Status
                             </span>
+                        </td>
+                        <td class="px-3 py-3 text-gray-600 text-xs">@(d.UserProvidedReference ?? "-")</td>
+                        <td class="px-3 py-3">
+                            @if (!string.IsNullOrEmpty(d.ProofImagePath))
+                            {
+                                <a href="@d.ProofImagePath" target="_blank" class="text-blue-950 text-xs font-semibold hover:underline">
+                                    <i class="fa-solid fa-image me-1"></i> View
+                                </a>
+                            }
+                            else
+                            {
+                                <span class="text-xs text-gray-400">-</span>
+                            }
                         </td>
                         <td class="px-3 py-3 text-gray-400 text-xs">@d.CreatedAt.ToString("MMM dd, yyyy")</td>
                         <td class="px-5 py-3">

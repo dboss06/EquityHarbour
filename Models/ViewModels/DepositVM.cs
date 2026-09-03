@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Http;
 
 namespace EquityHarbour.Models.ViewModels
 {
@@ -12,5 +13,7 @@ namespace EquityHarbour.Models.ViewModels
 
         public string? Description { get; set; }
         public List<EquityHarbour.DTOs.DepositAccounts.DepositAccountDto> Accounts { get; set; } = new();
+        public IFormFile? ProofImage { get; set; }
+        public string? UserProvidedReference { get; set; }
     }
 }

@@ -60,7 +60,9 @@ namespace EquityHarbour.Services
                 WalletId = wallet.Id,
                 AccountBankName = accountBankName,
                 AccountNumber = accountNumber,
-                AccountName = accountName
+                AccountName = accountName,
+                ProofImagePath = request.ProofImagePath,
+                UserProvidedReference = request.UserProvidedReference
             };
             _context.Deposits.Add(deposit);
             await _context.SaveChangesAsync();
@@ -75,8 +77,11 @@ namespace EquityHarbour.Services
                     Description = d.Description,
                     Status = d.Status,
                     CreatedAt = d.CreatedAt,
-                    CompletedAt = d.CompletedAt
-                }).ToListAsync();
+                    CompletedAt = d.CompletedAt,
+                ProofImagePath = d.ProofImagePath,
+                UserProvidedReference = d.UserProvidedReference,
+
+            }).ToListAsync();
         }
         public async Task<DepositDTO?> GetUserDepositAsync(string userId, long id)
         {
@@ -87,7 +92,9 @@ namespace EquityHarbour.Services
                 Description = d.Description,
                 Status = d.Status,
                 CreatedAt = d.CreatedAt,
-                CompletedAt = d.CompletedAt
+                CompletedAt = d.CompletedAt,
+                ProofImagePath = d.ProofImagePath,
+                UserProvidedReference = d.UserProvidedReference,
             }).FirstOrDefaultAsync();
         }
         public async Task<List<DepositDTO>> GetAllAsync()
@@ -105,7 +112,9 @@ namespace EquityHarbour.Services
                 AccountNumber = d.AccountNumber,
                 AccountName = d.AccountName,
                 UserId = d.UserId,
-                UserFullName = d.User.FullName
+                UserFullName = d.User.FullName,
+                ProofImagePath = d.ProofImagePath,
+                UserProvidedReference = d.UserProvidedReference,
             }).ToListAsync();
         }
         public async Task<DepositDTO?> GetByIdAsync(long id)
@@ -117,8 +126,10 @@ namespace EquityHarbour.Services
                     Description = d.Description,
                     Status = d.Status,
                     CreatedAt = d.CreatedAt,
-                    CompletedAt = d.CompletedAt
-                }).FirstOrDefaultAsync();
+                    CompletedAt = d.CompletedAt,
+                ProofImagePath = d.ProofImagePath,
+                UserProvidedReference = d.UserProvidedReference,
+            }).FirstOrDefaultAsync();
         }
         public async Task<DepositDTO> ApproveAsync(long id)
         {
@@ -207,7 +218,9 @@ namespace EquityHarbour.Services
                 AccountNumber = deposit.AccountNumber,
                 AccountName = deposit.AccountName,
                 UserId = deposit.UserId,
-                UserFullName = deposit.User?.FullName ?? string.Empty
+                UserFullName = deposit.User?.FullName ?? string.Empty,
+                ProofImagePath = deposit.ProofImagePath,
+                UserProvidedReference = deposit.UserProvidedReference,
             };
         }
     }
