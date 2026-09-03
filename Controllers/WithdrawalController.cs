@@ -25,7 +25,8 @@ namespace EquityHarbour.Controllers
             IWithdrawalService withdrawalService,
             IInvestmentService investmentService,
             IWithdrawalLimitService limitService,
-            IReferralService referralService)
+            IReferralService referralService,
+            IBankAccountService bankAccountService)
         {
             _userManager = userManager;
             _walletService = walletService;
@@ -33,6 +34,7 @@ namespace EquityHarbour.Controllers
             _investmentService = investmentService;
             _limitService = limitService;
             _referralService = referralService;
+            _bankAccountService = bankAccountService;
         }
 
         private async Task PopulateTierInfoAsync(WithdrawViewModel model, string userId)
@@ -51,9 +53,13 @@ namespace EquityHarbour.Controllers
         public async Task<IActionResult> Index()
         {
             var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
             var wallet = await _walletService.GetUserWalletAsync(user.Id);
             var savedAccount = await _bankAccountService.GetByUserIdAsync(user.Id);
-
             var model = new WithdrawViewModel
             {
                 CurrentBalance = wallet?.AvailableBalance ?? 0,
