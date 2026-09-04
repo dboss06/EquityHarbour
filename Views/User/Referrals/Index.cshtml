@@ -5,6 +5,7 @@
     string TabClass(string level) => activeLevel == level
         ? "bg-blue-950 text-white"
         : "bg-white text-gray-700 border border-gray-100";
+    var qualifiedIds = ViewData["QualifiedIds"] as HashSet<string> ?? new HashSet<string>();
 }
 
 <nav class="fixed top-0 left-0 w-full bg-white shadow-gray-100 z-50">
@@ -45,7 +46,13 @@
                                 @(member.FullName.Length > 0 ? member.FullName[..1].ToUpper() : "?")
                             </div>
                             <div>
-                                <p class="text-sm font-bold text-gray-800">@member.FullName</p>
+                                <p class="text-sm font-bold text-gray-800">
+                                    @member.FullName
+                                    @if (qualifiedIds.Contains(member.Id))
+                                    {
+                                        <i class="fa-solid fa-circle-check text-blue-500 text-xs" title="Deposited and invested"></i>
+                                    }
+                                </p>
                                 <p class="text-xs text-gray-400">@member.Email</p>
                             </div>
                         </div>

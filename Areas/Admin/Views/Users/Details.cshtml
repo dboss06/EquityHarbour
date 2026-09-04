@@ -151,7 +151,13 @@
                                     @(referral.FullName.Length > 0 ? referral.FullName[..1].ToUpper() : "?")
                                 </div>
                                 <div>
-                                    <p class="text-sm font-bold text-gray-800">@referral.FullName</p>
+                                    <p class="text-sm font-bold text-gray-800 flex items-center gap-1.5">
+                                        @referral.FullName
+                                        @if (Model.QualifiedReferralIds.Contains(referral.Id))
+                                        {
+                                            <i class="fa-solid fa-circle-check text-blue-500 text-xs" title="Deposited and invested"></i>
+                                        }
+                                    </p>
                                     <p class="text-xs text-gray-400">@referral.Email</p>
                                 </div>
                             </div>

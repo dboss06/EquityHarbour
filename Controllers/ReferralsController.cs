@@ -38,7 +38,10 @@ namespace EquityHarbour.Controllers
                 _ => await _referralService.GetDirectReferralsAsync(user.Id)
             };
 
+            var qualifiedIds = await _referralService.GetQualifiedUserIdsAsync(members.Select(m => m.Id));
+
             ViewData["ActiveLevel"] = level;
+            ViewData["QualifiedIds"] = qualifiedIds;
             return View(members);
         }
     }

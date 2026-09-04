@@ -12,5 +12,6 @@ namespace EquityHarbour.Services
         Task<List<ApplicationUser>> GetThirdLevelReferralsAsync(string userId);
         Task<int> GetDirectReferralsWithFirstDepositCountAsync(string userId);
         Task<int> GetQualifiedReferralCountAsync(string userId);
+        Task<HashSet<string>> GetQualifiedUserIdsAsync(IEnumerable<string> userIds);
     }
 }

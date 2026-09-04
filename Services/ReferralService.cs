@@ -130,5 +130,24 @@ namespace EquityHarbour.Services
 
             return withDeposit.Intersect(withInvestment).Count();
         }
+        public async Task<HashSet<string>> GetQualifiedUserIdsAsync(IEnumerable<string> userIds)
+        {
+            var ids = userIds.Distinct().ToList();
+            if (!ids.Any()) return new HashSet<string>();
+
+            var withDeposit = await _context.Deposits
+                .Where(d => ids.Contains(d.UserId) && d.Status == DepositStatus.Completed)
+                .Select(d => d.UserId)
+                .Distinct()
+                .ToListAsync();
+
+            var withInvestment = await _context.Investments
+                .Where(i => ids.Contains(i.UserId))
+                .Select(i => i.UserId)
+                .Distinct()
+                .ToListAsync();
+
+            return withDeposit.Intersect(withInvestment).ToHashSet();
+        }
     }
 }

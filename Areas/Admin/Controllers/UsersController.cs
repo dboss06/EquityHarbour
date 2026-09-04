@@ -76,6 +76,8 @@ namespace EquityHarbour.Areas.Admin.Controllers
             var directReferrals = await _referralService.GetDirectReferralsAsync(user.Id);
             var secondLevelReferrals = await _referralService.GetSecondLevelReferralsAsync(user.Id);
             var thirdLevelReferrals = await _referralService.GetThirdLevelReferralsAsync(user.Id);
+            var allReferralIds = directReferrals.Select(r => r.Id).Concat(secondLevelReferrals.Select(r => r.Id)).Concat(thirdLevelReferrals.Select(r => r.Id));
+            var qualifiedReferralIds = await _referralService.GetQualifiedUserIdsAsync(allReferralIds);
             ApplicationUser? referredBy = null;
             if (!string.IsNullOrEmpty(user.ReferredByUserId))
             {
@@ -96,7 +98,8 @@ namespace EquityHarbour.Areas.Admin.Controllers
                 ThirdLevelReferrals = thirdLevelReferrals,
                 ReferredById = referredBy?.Id,
                 ReferredByFullName = referredBy?.FullName,
-                ReferredByEmail = referredBy?.Email
+                ReferredByEmail = referredBy?.Email,
+                QualifiedReferralIds = qualifiedReferralIds
             };
             return View(model);
         }

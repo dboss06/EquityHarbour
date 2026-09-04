@@ -20,5 +20,6 @@ namespace EquityHarbour.Areas.Admin.Models
         public List<ApplicationUser> DirectReferrals { get; set; } = new();
         public List<ApplicationUser> SecondLevelReferrals { get; set; } = new();
         public List<ApplicationUser> ThirdLevelReferrals { get; set; } = new();
+        public HashSet<string> QualifiedReferralIds { get; set; } = new();
     }
 }
